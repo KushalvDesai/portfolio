@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Web3 Developer & Frontend Developer",
 };
 
+import DockNav from "@/components/DockNav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,6 +36,7 @@ export default function RootLayout({
           <CustomCursor />
           <ThemeToggle />
           {children}
+          <DockNav />
         </ThemeProvider>
       </body>
     </html>
