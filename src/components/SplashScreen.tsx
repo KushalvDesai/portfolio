@@ -9,6 +9,15 @@ export default function SplashScreen({
 }) {
     const [showSplash, setShowSplash] = useState(() => {
         if (typeof window !== "undefined") {
+            // Check if this is a hard reload or initial navigation
+            const navEntries = performance.getEntriesByType("navigation");
+            if (navEntries.length > 0) {
+                const navType = (navEntries[0] as PerformanceNavigationTiming).type;
+                if (navType === "reload") {
+                    sessionStorage.removeItem("hasSeenSplash");
+                    return true;
+                }
+            }
             return !sessionStorage.getItem("hasSeenSplash");
         }
         return true;

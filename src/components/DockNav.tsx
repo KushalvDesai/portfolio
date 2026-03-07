@@ -14,6 +14,11 @@ const navItems = [
         icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2306B6D4'/%3E%3Cstop offset='100%25' stop-color='%230EA5E9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g2)'/%3E%3Ccircle cx='32' cy='24' r='8' fill='white'/%3E%3Cpath d='M20 46c0-6.627 5.373-12 12-12s12 5.373 12 12' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
     },
     {
+        id: "experience",
+        name: "Experience",
+        icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g5' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%238B5CF6'/%3E%3Cstop offset='100%25' stop-color='%23A855F7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g5)'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M32 22v10l7 7' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
+    },
+    {
         id: "projects",
         name: "Projects",
         icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23F59E0B'/%3E%3Cstop offset='100%25' stop-color='%23EF4444'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g3)'/%3E%3Crect x='14' y='20' width='36' height='26' rx='3' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M24 20V16a4 4 0 014-4h8a4 4 0 014 4v4' stroke='white' stroke-width='2.5' fill='none'/%3E%3Cline x1='14' y1='32' x2='50' y2='32' stroke='white' stroke-width='2'/%3E%3C/svg%3E",
@@ -23,11 +28,7 @@ const navItems = [
         name: "Skills",
         icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2310B981'/%3E%3Cstop offset='100%25' stop-color='%2334D399'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g4)'/%3E%3Cpath d='M22 18l-8 14 8 14h20l8-14-8-14H22z' fill='none' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M26 28l4 4 8-8' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
     },
-    {
-        id: "experience",
-        name: "Experience",
-        icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g5' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%238B5CF6'/%3E%3Cstop offset='100%25' stop-color='%23A855F7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g5)'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M32 22v10l7 7' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
-    },
+
     {
         id: "achievements",
         name: "Achievements",
@@ -51,9 +52,16 @@ export default function DockNav() {
         if (window.location.pathname === "/") {
             const el = document.getElementById(appId);
             if (el) {
-                const sectionBottom = el.getBoundingClientRect().bottom + window.scrollY;
-                const y = sectionBottom - window.innerHeight;
-                window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+                if (appId === "experience") {
+                    // Scroll so the top of the section aligns with the top of the viewport
+                    const y = el.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+                } else {
+                    // Scroll so the bottom of the section aligns with the bottom of the viewport
+                    const sectionBottom = el.getBoundingClientRect().bottom + window.scrollY;
+                    const y = sectionBottom - window.innerHeight;
+                    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+                }
             }
         } else {
             // Otherwise, navigate strictly to the home page hash

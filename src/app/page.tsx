@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
 
 export default function Home() {
@@ -16,9 +17,14 @@ export default function Home() {
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
-          const sectionBottom = el.getBoundingClientRect().bottom + window.scrollY;
-          const y = sectionBottom - window.innerHeight;
-          window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+          if (id === "experience") {
+            const y = el.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+          } else {
+            const sectionBottom = el.getBoundingClientRect().bottom + window.scrollY;
+            const y = sectionBottom - window.innerHeight;
+            window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+          }
         }
       }, 100); // Small delay to ensure the DOM is painted
     }
@@ -28,6 +34,7 @@ export default function Home() {
     <SplashScreen>
       <HeroSection />
       <AboutSection />
+      <ExperienceSection />
       <ProjectsSection />
     </SplashScreen>
   );
