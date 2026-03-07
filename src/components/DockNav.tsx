@@ -42,11 +42,22 @@ const navItems = [
 
 export default function DockNav() {
     const handleAppClick = (appId: string) => {
-        const el = document.getElementById(appId);
-        if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
-        } else if (appId === "home") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
+        if (appId === "home") {
+            window.location.href = "/";
+            return;
+        }
+
+        // If we are already on the home page, scroll smoothly
+        if (window.location.pathname === "/") {
+            const el = document.getElementById(appId);
+            if (el) {
+                const sectionBottom = el.getBoundingClientRect().bottom + window.scrollY;
+                const y = sectionBottom - window.innerHeight;
+                window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+            }
+        } else {
+            // Otherwise, navigate strictly to the home page hash
+            window.location.href = `/#${appId}`;
         }
     };
 

@@ -23,7 +23,7 @@ export default function CustomCursor() {
             style={{
                 left: pos.x,
                 top: pos.y,
-                width: isDark ? 30 : 20,
+                width: isDark ? 30 : 15,
                 height: isDark ? 45 : 35,
                 transform: "translate(-50%, -50%) rotate(-30deg)",
             }}

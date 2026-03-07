@@ -7,12 +7,28 @@ export default function SplashScreen({
 }: {
     children: React.ReactNode;
 }) {
-    const [showSplash, setShowSplash] = useState(true);
+    const [showSplash, setShowSplash] = useState(() => {
+        if (typeof window !== "undefined") {
+            return !sessionStorage.getItem("hasSeenSplash");
+        }
+        return true;
+    });
     const [fadeOut, setFadeOut] = useState(false);
 
     useEffect(() => {
+        if (!showSplash) return;
+
+        // Always start at the top on page load/refresh
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+        window.scrollTo(0, 0);
+
         // Start fade-out after 3.5 seconds
-        const fadeTimer = setTimeout(() => setFadeOut(true), 3500);
+        const fadeTimer = setTimeout(() => {
+            setFadeOut(true);
+            sessionStorage.setItem("hasSeenSplash", "true");
+        }, 3500);
         // Remove splash screen after fade animation completes
         const removeTimer = setTimeout(() => setShowSplash(false), 4300);
 
@@ -20,7 +36,7 @@ export default function SplashScreen({
             clearTimeout(fadeTimer);
             clearTimeout(removeTimer);
         };
-    }, []);
+    }, [showSplash]);
 
     return (
         <>
