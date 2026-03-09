@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import SkillsSection from "@/components/SkillsSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
 
@@ -36,6 +37,7 @@ export default function Home() {
       <AboutSection />
       <ExperienceSection />
       <ProjectsSection />
+      <SkillsSection />
     </SplashScreen>
   );
 }
