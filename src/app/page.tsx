@@ -7,6 +7,7 @@ import AboutSection from "@/components/AboutSection";
 import SkillsSection from "@/components/SkillsSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
+import AchievementsSection from "@/components/AchievementsSection";
 
 export default function Home() {
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function Home() {
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
-          if (id === "experience") {
+          if (id === "experience" || id === "achievements") {
             const y = el.getBoundingClientRect().top + window.scrollY;
             window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
           } else {
@@ -38,6 +39,7 @@ export default function Home() {
       <ExperienceSection />
       <ProjectsSection />
       <SkillsSection />
+      <AchievementsSection />
     </SplashScreen>
   );
 }
