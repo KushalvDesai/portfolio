@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -37,6 +38,10 @@ export default function RootLayout({
           <ThemeToggle />
           {children}
           <DockNav />
+          <Script
+            strategy="lazyOnload"
+            src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+          />
         </ThemeProvider>
       </body>
     </html>

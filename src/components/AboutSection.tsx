@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Code, Blocks, Globe, Rocket, Terminal, Sparkles } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 /* ── Animated sub-components ── */
 
 function CodeTyper({ isDark }: { isDark: boolean }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref);
     const lines = [
         "const dev = {",
         '  name: "Kushal",',
@@ -18,14 +20,15 @@ function CodeTyper({ isDark }: { isDark: boolean }) {
     const [visibleLines, setVisibleLines] = useState(0);
 
     useEffect(() => {
+        if (!isInView) return;
         const interval = setInterval(() => {
             setVisibleLines((prev) => (prev >= lines.length ? 0 : prev + 1));
         }, 800);
         return () => clearInterval(interval);
-    }, [lines.length]);
+    }, [lines.length, isInView]);
 
     return (
-        <div className="flex items-center justify-center h-full font-mono text-sm">
+        <div ref={ref} className="flex items-center justify-center h-full font-mono text-sm">
             <pre className="text-left">
                 {lines.slice(0, visibleLines).map((line, i) => (
                     <motion.div
@@ -44,17 +47,20 @@ function CodeTyper({ isDark }: { isDark: boolean }) {
 }
 
 function BlockchainBlocks({ isDark }: { isDark: boolean }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref);
     const [activeBlock, setActiveBlock] = useState(0);
 
     useEffect(() => {
+        if (!isInView) return;
         const interval = setInterval(() => {
             setActiveBlock((prev) => (prev + 1) % 4);
         }, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [isInView]);
 
     return (
-        <div className="flex items-center justify-center h-full gap-2">
+        <div ref={ref} className="flex items-center justify-center h-full gap-2">
             {[0, 1, 2, 3].map((i) => (
                 <motion.div
                     key={i}
@@ -116,6 +122,8 @@ function RocketLaunch() {
 }
 
 function TerminalAnimation({ isDark }: { isDark: boolean }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref);
     const commands = [
         "$ npx hardhat compile",
         "Compiling 12 files...",
@@ -124,14 +132,15 @@ function TerminalAnimation({ isDark }: { isDark: boolean }) {
     const [line, setLine] = useState(0);
 
     useEffect(() => {
+        if (!isInView) return;
         const interval = setInterval(() => {
             setLine((prev) => (prev + 1) % commands.length);
         }, 1500);
         return () => clearInterval(interval);
-    }, [commands.length]);
+    }, [commands.length, isInView]);
 
     return (
-        <div className="flex flex-col items-start justify-center h-full font-mono text-xs gap-1 px-2">
+        <div ref={ref} className="flex flex-col items-start justify-center h-full font-mono text-xs gap-1 px-2">
             <AnimatePresence mode="wait">
                 <motion.span
                     key={line}

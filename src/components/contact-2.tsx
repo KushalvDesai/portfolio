@@ -29,7 +29,8 @@ export const Contact2 = ({
     lastname: "",
     email: "",
     subject: "",
-    message: ""
+    message: "",
+    website: "", // Honeypot
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error" | null, message: string }>({ type: null, message: "" });
@@ -54,17 +55,31 @@ export const Contact2 = ({
     setSubmitStatus({ type: null, message: "" });
 
     try {
+      // @ts-ignore
+      if (typeof window === "undefined" || !window.grecaptcha) {
+        throw new Error("reCAPTCHA not loaded");
+      }
+
+      // @ts-ignore
+      const token = await window.grecaptcha.execute(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY, { action: "contact" });
+
+      const payload = {
+        ...formData,
+        token: token,
+        honeypot: formData.website,
+      };
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         setSubmitStatus({ type: "success", message: "Message sent! I'll get back to you soon." });
-        setFormData({ firstname: "", lastname: "", email: "", subject: "", message: "" });
+        setFormData({ firstname: "", lastname: "", email: "", subject: "", message: "", website: "" });
       } else {
         const data = await response.json();
         setSubmitStatus({
@@ -147,6 +162,16 @@ export const Contact2 = ({
             </div>
           </div>
           <form onSubmit={handleSubmit} className="mx-auto flex max-w-screen-md flex-col gap-6 rounded-lg border p-10 bg-card/50">
+            {/* Hidden honeypot field for bot protection */}
+            <input
+              type="text"
+              id="website"
+              value={formData.website}
+              onChange={handleInputChange}
+              style={{ display: "none" }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
             <div className="flex gap-4">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="firstname">First Name *</Label>
