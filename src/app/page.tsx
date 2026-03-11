@@ -8,6 +8,8 @@ import SkillsSection from "@/components/SkillsSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import AchievementsSection from "@/components/AchievementsSection";
+import { Contact2 } from "@/components/contact-2";
+import DockNav from "@/components/DockNav";
 
 export default function Home() {
   useEffect(() => {
@@ -33,14 +35,20 @@ export default function Home() {
   }, []);
 
   return (
-    <SplashScreen>
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <SkillsSection />
-      <AchievementsSection />
-    </SplashScreen>
+    <>
+      <SplashScreen>
+        <HeroSection />
+        <AboutSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <SkillsSection />
+        <AchievementsSection />
+        <div id="contact">
+          <Contact2 />
+        </div>
+      </SplashScreen>
+      <DockNav />
+    </>
   );
 }
 
