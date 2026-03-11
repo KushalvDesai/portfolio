@@ -2,11 +2,11 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 
-// Types for the component
 interface DockApp {
   id: string;
   name: string;
-  icon: string;
+  icon?: string;
+  isDivider?: boolean;
 }
 
 interface MacOSDockProps {
@@ -92,8 +92,18 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
       return apps.map(() => minScale);
     }
 
-    return apps.map((_, index) => {
-      const normalIconCenter = (index * (baseIconSize + baseSpacing)) + (baseIconSize / 2);
+    let currentX = 0;
+    const normalCenters = apps.map(app => {
+      const width = app.isDivider ? 24 : (baseIconSize + baseSpacing);
+      const center = currentX + (width / 2);
+      currentX += width;
+      return center;
+    });
+
+    return apps.map((app, index) => {
+      if (app.isDivider) return minScale;
+
+      const normalIconCenter = normalCenters[index];
       const minX = mousePosition - (effectWidth / 2);
       const maxX = mousePosition + (effectWidth / 2);
 
@@ -113,13 +123,20 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
   const calculatePositions = useCallback((scales: number[]) => {
     let currentX = 0;
 
-    return scales.map((scale) => {
+    return scales.map((scale, index) => {
+      if (apps[index].isDivider) {
+        const dividerWidth = 24;
+        const centerX = currentX + (dividerWidth / 2);
+        currentX += dividerWidth;
+        return centerX;
+      }
+
       const scaledWidth = baseIconSize * scale;
       const centerX = currentX + (scaledWidth / 2);
       currentX += scaledWidth + baseSpacing;
       return centerX;
     });
-  }, [baseIconSize, baseSpacing]);
+  }, [apps, baseIconSize, baseSpacing]);
 
   // Initialize positions
   useEffect(() => {
@@ -231,9 +248,9 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
   // Calculate content width
   const contentWidth = currentPositions.length > 0
     ? Math.max(...currentPositions.map((pos, index) =>
-      pos + (baseIconSize * currentScales[index]) / 2
+      apps[index].isDivider ? pos + 12 : pos + (baseIconSize * currentScales[index]) / 2
     ))
-    : (apps.length * (baseIconSize + baseSpacing)) - baseSpacing;
+    : apps.reduce((acc, app) => acc + (app.isDivider ? 24 : baseIconSize + baseSpacing), 0) - baseSpacing;
 
   const padding = Math.max(8, baseIconSize * 0.12);
 
@@ -273,28 +290,38 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
             <div
               key={app.id}
               ref={(el) => { iconRefs.current[index] = el; }}
-              className="absolute cursor-pointer flex flex-col items-center justify-end"
+              className={`absolute flex flex-col items-center justify-end ${app.isDivider ? 'pointer-events-none' : 'cursor-pointer'}`}
               title={app.name}
-              onClick={() => handleAppClick(app.id, index)}
+              onClick={() => { if (!app.isDivider) handleAppClick(app.id, index); }}
               style={{
-                left: `${position - scaledSize / 2}px`,
+                left: `${position - (app.isDivider ? 12 : scaledSize / 2)}px`,
                 bottom: '0px',
-                width: `${scaledSize}px`,
-                height: `${scaledSize}px`,
+                width: `${app.isDivider ? 24 : scaledSize}px`,
+                height: `${app.isDivider ? baseIconSize : scaledSize}px`,
                 transformOrigin: 'bottom center',
                 zIndex: Math.round(scale * 10)
               }}
             >
-              <img
-                src={app.icon}
-                alt={app.name}
-                width={scaledSize}
-                height={scaledSize}
-                className="object-contain"
-                style={{
-                  filter: `drop-shadow(0 ${scale > 1.2 ? Math.max(2, baseIconSize * 0.05) : Math.max(1, baseIconSize * 0.03)}px ${scale > 1.2 ? Math.max(4, baseIconSize * 0.1) : Math.max(2, baseIconSize * 0.06)}px rgba(0,0,0,${0.2 + (scale - 1) * 0.15}))`
-                }}
-              />
+              {app.isDivider ? (
+                <div
+                  className="w-[2px] rounded-full bg-white/20"
+                  style={{
+                    height: `${baseIconSize * 0.6}px`,
+                    marginBottom: `${baseIconSize * 0.2}px`
+                  }}
+                />
+              ) : (
+                <img
+                  src={app.icon}
+                  alt={app.name}
+                  width={scaledSize}
+                  height={scaledSize}
+                  className="object-contain"
+                  style={{
+                    filter: `drop-shadow(0 ${scale > 1.2 ? Math.max(2, baseIconSize * 0.05) : Math.max(1, baseIconSize * 0.03)}px ${scale > 1.2 ? Math.max(4, baseIconSize * 0.1) : Math.max(2, baseIconSize * 0.06)}px rgba(0,0,0,${0.2 + (scale - 1) * 0.15}))`
+                  }}
+                />
+              )}
 
               {/* App Indicator Dot */}
               {openApps.includes(app.id) && (

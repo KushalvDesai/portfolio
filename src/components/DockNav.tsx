@@ -31,13 +31,23 @@ const navItems = [
 
     {
         id: "achievements",
-        name: "Achievements",
+        name: "Achievements and Certificates",
         icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g6' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23F59E0B'/%3E%3Cstop offset='100%25' stop-color='%23FBBF24'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g6)'/%3E%3Cpath d='M32 14l5 10 11 2-8 7 2 11-10-5-10 5 2-11-8-7 11-2z' fill='white'/%3E%3C/svg%3E",
     },
     {
         id: "contact",
         name: "Contact Me",
         icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g7' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23EC4899'/%3E%3Cstop offset='100%25' stop-color='%23F43F5E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g7)'/%3E%3Crect x='12' y='18' width='40' height='28' rx='4' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M12 22l20 12 20-12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+    },
+    {
+        id: "divider",
+        name: "",
+        isDivider: true,
+    },
+    {
+        id: "resume",
+        name: "Download Resume",
+        icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g8' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2310B981'/%3E%3Cstop offset='100%25' stop-color='%23059669'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g8)'/%3E%3Cpath d='M32 16v24' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M22 30l10 10 10-10' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='18' y1='48' x2='46' y2='48' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E",
     },
 ];
 
@@ -48,11 +58,23 @@ export default function DockNav() {
             return;
         }
 
+        if (appId === "resume") {
+            const link = document.createElement("a");
+            link.href = "/KushalDesai-Resume.pdf";
+            link.download = "KushalDesai-Resume.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
+        }
+
+        if (appId === "divider") return;
+
         // If we are already on the home page, scroll smoothly
         if (window.location.pathname === "/") {
             const el = document.getElementById(appId);
             if (el) {
-                if (appId === "experience") {
+                if (appId === "experience" || appId === "achievements") {
                     // Scroll so the top of the section aligns with the top of the viewport
                     const y = el.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
