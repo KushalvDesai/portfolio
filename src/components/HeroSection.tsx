@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
-const roles = ["Web3 Developer", "Frontend Developer"];
+const roles = ["Web3 Developer", "Software Developer"];
 
 export default function HeroSection() {
     const { theme } = useTheme();
